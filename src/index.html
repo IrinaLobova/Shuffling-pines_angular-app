@@ -1,79 +1,85 @@
 <!DOCTYPE html>
-<html ng-app="shuffling">
+<html ng-app="shuffling"> <!-- ng starts to process the code-->
 
   <head>
     <meta charset="utf-8" />
     <title>Shuffling Pines</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link href="../bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
 
     <script src="../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+
 
     <script src="../src/app.js"></script>
   </head>
 
-  <body>
+  <body ng-controller="FormController as formCtrl">
     <h1>Shuffling Pines</h1>
     <div class="row">
       <div class="col-md-12">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#form" aria-controls="form" role="tab" data-toggle="tab">Form</a></li>
-          <li role="presentation"><a href="#guests" aria-controls="guests" role="tab" data-toggle="tab">Guests</a></li>
+          <li  role="presentation" class="active"><a href="#form" aria-controls="form" role="tab" data-toggle="tab">Form</a></li>
+          <li role="presentation"><a href="#guests" aria-controls="guests" role="tab" data-toggle="tab" ng-model="tabsCtrl.guesttab" ng-init="tabsCtrl.guesttab=true">Guests</a></li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
           <!-- Tab pane 1 -->
           <div role="tabpanel" class="tab-pane active" id="form">
-            <div>
+            <div >
 
-              <form class="col-md-6 well">
+              <form class="col-md-6 well my-form" name="guestform" novalidate ng-submit="guestform.$valid && formCtrl.guest.submit()">
                 <div class="form-group">
                   <label for="guest-name">Guest Name</label>
-                  <input type="text" class="form-control" id="guest-name" placeholder="">
+                  <input name="guestname" type="text" class="form-control" id="guest-name" placeholder="" ng-model="formCtrl.gname" required>
+                  <span class="error" ng-show="guestform.gname.$error.required">required</span>
                 </div>
                 <div class="form-group">
                   <label for="transition-date">Transition Date</label>
-                  <input type="date" class="form-control" id="transition-date" placeholder="">
+                  <input name="date" type="date" class="form-control" id="transition-date" placeholder="" ng-model="formCtrl.date" required>
+                  <span class="error" ng-show="guestform.date.$error.required">required</span>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="pickup-dropoff" id="pickup" value="pickup" checked>
+                    <input type="radio" name="pickup-dropoff" id="pickup" value="pickup" ng-model="formCtrl.checked">
                     Pick-up
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="pickup-dropoff" id="dropoff" value="dropoff">
+                    <input type="radio" name="pickup-dropoff" id="dropoff" value="dropoff" ng-model="formCtrl.checked">
                     Drop-off
                   </label>
                 </div>
-                <div class="form-group">
+                <div class="form-group" ng-hide="formCtrl.checked == 'dropoff'" ng-show="formCtrl.checked == 'pickup'">
                   <label for="location">Location</label>
-                  <textarea class="form-control" id="location"></textarea>
+                  <textarea class="form-control" id="location" ng-model="formCtrl.location"></textarea>
                 </div>
                 <button type="submit" class="btn">Submit</button>
               </form>
 
               <!-- bound display -->
-              <div ng-show="false" class="col-md-6 well">
-                <div ng-show="false" class="form-group">
+              <div class="col-md-6 well"> 
+                <div class="form-group">
                   <label>Name: </label>
-                  John Harvard
+                  <div ng-bind="formCtrl.gname"></div>
                 </div>
-                <div ng-show="false" class="form-group">
+                <div class="form-group">
                   <label>Transition Date: </label>
-                  today!
+                  <div ng-bind="formCtrl.date"></div>
                 </div>
-                <div ng-show="false" class="form-group">
+                <div class="form-group">
                   <label>Status: </label>
-                  drop-off
+                  <div ng-bind="formCtrl.checked"></div>
                 </div>
-                <div ng-show="false" class="form-group">
+                <div class="form-group">
                   <label>Location: </label>
-                  right here
+                  <div ng-bind="formCtrl.location"></div>
                 </div>
               </div>
 
@@ -81,12 +87,40 @@
           </div>
 
           <!-- Tab pane 2 -->
-          <div role="tabpanel" class="tab-pane" id="guests">
-            <ul class="list-unstyled">
-              <li>
-
-              </li>
-            </ul>
+          <div role="tabpanel" class="tab-pane" id="guests" ng-if="tabsCtrl.guesttab" >
+            <div class="col-md-3">
+              Name:
+              <ul class="list-unstyled" id="nameslist">
+                <li ng-repeat="guest in formCtrl.guests" editable-text="guest.gname" 
+                    onaftersave="formCtrl.updateGuest()" e-required>
+                  {{ guest.gname }}
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              Transition Date:
+              <ul class="list-unstyled" id="dateslist">
+                <li ng-repeat="guest in formCtrl.guests" editable-date="guest.date">
+                  {{ guest.date }}
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              Status:
+              <ul class="list-unstyled" id="statuslist">
+                <li ng-repeat="guest in formCtrl.guests">
+                  {{ guest.transit }}
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              Location (for pickup only):
+              <ul class="list-unstyled" id="locationslist">
+                <li ng-repeat="guest in formCtrl.guests">
+                  {{ guest.location }}
+                </li>
+              </ul>
+            </div>
           </div>
 
         </div>
