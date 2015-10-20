@@ -12,7 +12,7 @@
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../bower_components/angular/angular.min.js"></script>
     <script src="../bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
 
     <script src="../src/app.js"></script>
   </head>
@@ -100,15 +100,15 @@
             <div class="col-md-3">
               Transition Date:
               <ul class="list-unstyled" id="dateslist">
-                <li ng-repeat="guest in formCtrl.guests" editable-date="guest.date">
-                  {{ guest.date }}
+                <li ng-repeat="guest in formCtrl.guests" editable-bsdate="guest.date" e-datepicker-popup="dd-MMMM-yyyy" onaftersave="formCtrl.updateGuest()">
+                  {{ (guest.date | date:"dd/MM/yyyy") || "required"}}
                 </li>
               </ul>
             </div>
             <div class="col-md-3">
               Status:
               <ul class="list-unstyled" id="statuslist">
-                <li ng-repeat="guest in formCtrl.guests">
+                <li ng-repeat="guest in formCtrl.guests" editable-select="guest.transit" e-ng-options="s.value as s.text for s in formCtrl.statuses" onaftersave="formCtrl.updateGuest()">
                   {{ guest.transit }}
                 </li>
               </ul>

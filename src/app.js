@@ -1,10 +1,11 @@
-var app = angular.module('shuffling', ["xeditable"]);
+var app = angular.module('shuffling', ["xeditable", "ui.bootstrap"]);
 
 app.run(function(editableOptions) {
   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
 app.service('GuestsService', function(){
+	//localStorage.clear();
 	this.guests = (function(){
 		var guestList = []; 
 		var index = localStorage.length;
@@ -72,9 +73,8 @@ app.service('GuestsService', function(){
 
 });
 
-app.controller('FormController', ['GuestsService', function(guestsService){
+app.controller('FormController', ['GuestsService', '$scope', '$filter', function(guestsService, $scope, $filter){
 	var formCtrl = this;
-	formCtrl.title = "FormController";
 
 	formCtrl.checked = "pickup";
 	formCtrl.guest = {
@@ -102,7 +102,13 @@ app.controller('FormController', ['GuestsService', function(guestsService){
 		console.log(formCtrl.guests);
 		guestsService.guests.updateLocalStorage(formCtrl.guests);
 		guestsService.guests.printLS();
-	}
+	};
+
+	formCtrl.statuses = [
+		{value: "Arrived", text: "arrived"},
+		{value: "Pickup", text: "pickup"},
+		{value: "Dropoff", text: "dropoff"}
+	];
 }]);
 
 
@@ -110,22 +116,22 @@ app.controller('FormController', ['GuestsService', function(guestsService){
 
 
 
-app.controller('TabController', ['GuestsService', function(guestsService){
-	var tabsCtrl = this;
+// app.controller('TabController', ['GuestsService', function(guestsService){
+// 	var tabsCtrl = this;
 	
-	/*
-	tabsCtrl.printList = function(){
-		guestsService.guests.fillGuestList();
-		formCtrl.guests = guestsService.guests.getGuests();
-	}
-	*/
-	//tabsCtrl.deleteList = function(){
-	//	guestsService.guests.clear();
-	//}
 	
-	tabsCtrl.updateName = function(){
-		tabsCtrl.guests = guestsService.guests.getGuests();
-		console.log(tabsCtrl.guests);
-		guestsService.guests.printLS();
-	}
-}]);
+// 	tabsCtrl.printList = function(){
+// 		guestsService.guests.fillGuestList();
+// 		formCtrl.guests = guestsService.guests.getGuests();
+// 	}
+	
+// 	tabsCtrl.deleteList = function(){
+// 		guestsService.guests.clear();
+// 	}
+	
+// 	tabsCtrl.updateName = function(){
+// 		tabsCtrl.guests = guestsService.guests.getGuests();
+// 		console.log(tabsCtrl.guests);
+// 		guestsService.guests.printLS();
+// 	}
+// }]);
