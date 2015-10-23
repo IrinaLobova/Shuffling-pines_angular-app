@@ -1,7 +1,7 @@
 var app = angular.module('shuffling', ["xeditable", "ui.bootstrap"]);
 
 app.run(function(editableOptions) {
-  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+  	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
 app.service('GuestsService', function(){
@@ -35,7 +35,7 @@ app.service('GuestsService', function(){
 		}
 
 		pub.updateLocalStorage = function(newGuestList) {
-			console.log(newGuestList);
+			//console.log(newGuestList);
 			localStorage.clear();
 			for (var i in newGuestList) {
 				localStorage.setItem(i, JSON.stringify(newGuestList[i]));
@@ -46,7 +46,10 @@ app.service('GuestsService', function(){
 		pub.loadGuestList = function(){
 			for (var key in localStorage){
 				var guest = localStorage.getItem(key);
-				guest = JSON.parse(guest);
+				//console.log(typeof guest);
+				guest = jQuery.parseJSON(guest);
+				//guest = angular.fromJson(guest);
+				//console.log(typeof guest);
 				guestList.push(guest);
 			}
 		}
@@ -66,19 +69,24 @@ app.service('GuestsService', function(){
 		}
 
 		pub.loadGuestList();
- 		console.log(index);
+ 		//console.log(index);
 
 		return pub;
 	})();
 
 });
 
-app.controller('FormController', ['GuestsService', '$scope', '$filter', function(guestsService, $scope, $filter){
+app.controller('FormController', ['GuestsService', '$scope', function(guestsService, $scope){
 	var formCtrl = this;
 
 	formCtrl.checked = "pickup";
+
+	formCtrl.locationShowed = function(){
+		return formCtrl.checked === "pickup";
+	}
+
 	formCtrl.guest = {
-		submit: function() {
+		add: function() {
 			var guest = {};
 			guest.gname = formCtrl.gname;
 			guest.date = formCtrl.date;
@@ -92,46 +100,39 @@ app.controller('FormController', ['GuestsService', '$scope', '$filter', function
 
 			guestsService.guests.clearGuestList();
 			guestsService.guests.loadGuestList();
-			formCtrl.guests = guestsService.guests.getGuestList();
-
-			guestsService.guests.printLS();
+			//formCtrl.guests = guestsService.guests.getGuestList();
 		}
 	}
-	formCtrl.guests = guestsService.guests.getGuestList();
-	formCtrl.updateGuest = function() {
-		console.log(formCtrl.guests);
-		guestsService.guests.updateLocalStorage(formCtrl.guests);
-		guestsService.guests.printLS();
-	};
+	guestsService.guests.printLS();
 
-	formCtrl.statuses = [
-		{value: "Arrived", text: "arrived"},
-		{value: "Pickup", text: "pickup"},
-		{value: "Dropoff", text: "dropoff"}
-	];
 }]);
 
+app.controller('TabController', ['GuestsService', '$scope', function(guestsService, $scope){
+	var tabCtrl = this;
 
-
-
-
-
-// app.controller('TabController', ['GuestsService', function(guestsService){
-// 	var tabsCtrl = this;
+	//tabCtrl.guests = guestsService.guests.getGuestList();
 	
-	
-// 	tabsCtrl.printList = function(){
-// 		guestsService.guests.fillGuestList();
-// 		formCtrl.guests = guestsService.guests.getGuests();
-// 	}
-	
-// 	tabsCtrl.deleteList = function(){
-// 		guestsService.guests.clear();
-// 	}
-	
-// 	tabsCtrl.updateName = function(){
-// 		tabsCtrl.guests = guestsService.guests.getGuests();
-// 		console.log(tabsCtrl.guests);
-// 		guestsService.guests.printLS();
-// 	}
-// }]);
+	tabCtrl.refreshGuestList = function() {
+		tabCtrl.guests = guestsService.guests.getGuestList();
+	};
+
+	tabCtrl.updateGuest = function() {
+		//console.log(formCtrl.guests);
+		guestsService.guests.updateLocalStorage(tabCtrl.guests);
+		//guestsService.guests.printLS();
+	};
+
+	tabCtrl.statuses = [
+		{value: "arrived", text: "arrived"},
+		{value: "pickup", text: "pickup"},
+		{value: "dropoff", text: "dropoff"}
+	];
+
+	tabCtrl.removeGuest = function(index) {
+		console.log('h');
+    	tabCtrl.guests.splice(index, 1);
+    	guestsService.guests.updateLocalStorage(tabCtrl.guests);
+    	//guestsService.guests.printLS();
+  	};
+
+}]);

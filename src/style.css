@@ -1,3 +1,13 @@
 .error {
 	font: .9em "Open Sans", sans-serif;
+	color: red;
+}
+.btn-xs {
+	margin: 1em 1em;
+	padding-left: 1em;
+}
+.removeGuest {
+	color: red;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
 }
