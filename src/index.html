@@ -88,7 +88,7 @@
 
           <!-- Tab pane 2 -->
           <div role="tabpanel" class="tab-pane" id="guests">
-            <div class="col-md-2">
+            <div class="col-md-3">
               Name:
               <ul class="list-unstyled">
                 <li ng-repeat="guest in tabCtrl.guests track by $index" editable-text="guest.gname" 
@@ -97,7 +97,7 @@
                 </li>
               </ul>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               Transition Date:
               <ul class="list-unstyled">
                 <li ng-repeat="guest in tabCtrl.guests track by $index" editable-bsdate="guest.date" e-datepicker-popup="dd-MMMM-yyyy" onaftersave="tabCtrl.updateGuest()">
@@ -113,7 +113,7 @@
                 </li>
               </ul>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               Location (for pickup only):
               <ul class="list-unstyled">
                 <li ng-repeat="guest in tabCtrl.guests track by $index" editable-text="guest.location" onaftersave="tabCtrl.updateGuest()">
@@ -121,11 +121,11 @@
                 </li>
               </ul>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
               <ul class="list-unstyled">
                 Remove:
-                <li ng-repeat="guest in tabCtrl.guests track by $index">
-                  <a href="#" class="removeGuest" ng-click="tabCtrl.removeGuest($index)">remove guest</a>
+                <li ng-repeat="guest in tabCtrl.guests track by $index" class="removeGuest" >
+                  <div ng-click="tabCtrl.removeGuest($index)">remove guest</div>
                 </li>
               </ul>
             </div>

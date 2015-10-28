@@ -7,7 +7,12 @@
 	padding-left: 1em;
 }
 .removeGuest {
+	border-bottom: dashed 1px #428bca;
+	height: 21px;
+}
+.removeGuest div {
+	color: #428bca;
+}
+.removeGuest div:hover {
 	color: red;
-	-webkit-margin-before: 1em;
-	-webkit-margin-after: 1em;
 }

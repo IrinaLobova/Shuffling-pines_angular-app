@@ -47,7 +47,7 @@ app.service('GuestsService', function(){
 			for (var key in localStorage){
 				var guest = localStorage.getItem(key);
 				//console.log(typeof guest);
-				guest = jQuery.parseJSON(guest);
+				//guest = jQuery.parseJSON(guest);
 				//guest = angular.fromJson(guest);
 				//console.log(typeof guest);
 				guestList.push(guest);
@@ -103,8 +103,6 @@ app.controller('FormController', ['GuestsService', '$scope', function(guestsServ
 			//formCtrl.guests = guestsService.guests.getGuestList();
 		}
 	}
-	guestsService.guests.printLS();
-
 }]);
 
 app.controller('TabController', ['GuestsService', '$scope', function(guestsService, $scope){
@@ -134,5 +132,6 @@ app.controller('TabController', ['GuestsService', '$scope', function(guestsServi
     	guestsService.guests.updateLocalStorage(tabCtrl.guests);
     	//guestsService.guests.printLS();
   	};
+  	guestsService.guests.printLS();
 
 }]);
