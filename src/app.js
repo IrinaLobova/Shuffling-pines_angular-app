@@ -10,24 +10,29 @@ app.service('GuestsService', function(){
 		var guestList = []; 
 		var index = localStorage.length;
 
-		if (localStorage.length === 0) {
-			guestList = [
-				{
-					gname: "John Harvard",
-					date: "01.01.1636",
-					transit: "pickup",
-					location: "Harvard Campus"
-				},
-				{
-					gname: "Bilbo Baggins",
-					date: "09.22.2890",
-					transit: "pickup",
-					location: "Shire, Middle-Earth"
-				}
-			]
-		} 
 
 		var pub = {};
+
+		pub.prepopulateLocalStorage = function(){
+			if (localStorage.length === 0) {
+				var examples = [
+					{
+						gname: "John Harvard",
+						date: "01.01.1636",
+						transit: "pickup",
+						location: "Harvard Campus"
+					},
+					{
+						gname: "Bilbo Baggins",
+						date: "09.22.2890",
+						transit: "pickup",
+						location: "Shire, Middle-Earth"
+					}
+				];
+				localStorage.setItem(0, JSON.stringify(examples[0]));
+				localStorage.setItem(1, JSON.stringify(examples[1]));
+			} 
+		}
 
 		pub.save = function(guest){
 			localStorage.setItem(index, JSON.stringify(guest));
@@ -47,7 +52,7 @@ app.service('GuestsService', function(){
 			for (var key in localStorage){
 				var guest = localStorage.getItem(key);
 				//console.log(typeof guest);
-				//guest = jQuery.parseJSON(guest);
+				guest = angular.fromJson(guest);//jQuery.parseJSON(guest);
 				//guest = angular.fromJson(guest);
 				//console.log(typeof guest);
 				guestList.push(guest);
@@ -67,9 +72,6 @@ app.service('GuestsService', function(){
 				console.log(key + " " + localStorage.getItem(key));
 			}
 		}
-
-		pub.loadGuestList();
- 		//console.log(index);
 
 		return pub;
 	})();
@@ -108,16 +110,20 @@ app.controller('FormController', ['GuestsService', '$scope', function(guestsServ
 app.controller('TabController', ['GuestsService', '$scope', function(guestsService, $scope){
 	var tabCtrl = this;
 
-	//tabCtrl.guests = guestsService.guests.getGuestList();
+	tabCtrl.guests = guestsService.guests.getGuestList();
+
+	tabCtrl.fillExamples = function(){
+		guestsService.guests.prepopulateLocalStorage();
+		guestsService.guests.printLS;
+	}
 	
 	tabCtrl.refreshGuestList = function() {
 		tabCtrl.guests = guestsService.guests.getGuestList();
+		tabCtrl.fillExamples();
 	};
 
 	tabCtrl.updateGuest = function() {
-		//console.log(formCtrl.guests);
 		guestsService.guests.updateLocalStorage(tabCtrl.guests);
-		//guestsService.guests.printLS();
 	};
 
 	tabCtrl.statuses = [
@@ -127,11 +133,12 @@ app.controller('TabController', ['GuestsService', '$scope', function(guestsServi
 	];
 
 	tabCtrl.removeGuest = function(index) {
-		console.log('h');
     	tabCtrl.guests.splice(index, 1);
     	guestsService.guests.updateLocalStorage(tabCtrl.guests);
     	//guestsService.guests.printLS();
   	};
+
+  	guestsService.guests.loadGuestList();
   	guestsService.guests.printLS();
 
 }]);
