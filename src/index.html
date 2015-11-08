@@ -4,26 +4,28 @@
   <head>
     <meta charset="utf-8" />
     <title>Shuffling Pines</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link href="../bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
 
-    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../bower_components/angular/angular.min.js"></script>
-    <script src="../bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <script src="../src/app.js"></script>
-  </head>
+    <script src="vendors.js"></script>
+
+    <!--<script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>-->
+
+    <script src="app.js"></script>
+
+    </head>
 
   <body ng-controller="FormController as formCtrl">
     <h1>Shuffling Pines</h1>
     <div class="row" ng-controller="TabController as tabCtrl">
       <div class="col-md-12">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li  role="presentation" class="active"><a href="#form" aria-controls="form" role="tab" data-toggle="tab">Form</a></li>
+        <ul class="nav nav-tabs" role="tablist" id="tabs">
+          <li role="presentation" class="active"><a href="#form" aria-controls="form" role="tab" data-toggle="tab">Form</a></li>
           <li role="presentation"><a href="#guests" aria-controls="guests" role="tab" data-toggle="tab" ng-click="tabCtrl.refreshGuestList()">Guests</a></li>
         </ul>
 
@@ -132,7 +134,7 @@
           </div>
 
         </div>
-      </div>
+    </div>
     </div>
 
   </body>
